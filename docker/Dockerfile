@@ -1,18 +1,24 @@
+# Stage 1: Build the React app
 FROM node:16 as builder
 
 WORKDIR /app
-COPY client/package.json client/package-lock.json ./
+COPY client/package.json .
+COPY client/package-lock.json .
 RUN npm install
-COPY client/ ./
+COPY client .
 RUN npm run build
 
+# Stage 2: Build the server
 FROM node:16
 
 WORKDIR /app
-COPY server/package.json server/package-lock.json ./
+COPY server/package.json .
+COPY server/package-lock.json .
 RUN npm install
-COPY server/ ./
-COPY --from=builder /app/build ./client/build
+COPY server .
+
+# Copy built React app
+COPY --from=builder /app/build ./public
 
 # Install FFmpeg
 RUN apt-get update && apt-get install -y ffmpeg
