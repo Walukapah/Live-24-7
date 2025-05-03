@@ -3,7 +3,6 @@ FROM node:16 as builder
 
 WORKDIR /app
 COPY client/package.json .
-COPY client/package-lock.json .
 RUN npm install
 COPY client .
 RUN npm run build
@@ -13,7 +12,6 @@ FROM node:16
 
 WORKDIR /app
 COPY server/package.json .
-COPY server/package-lock.json .
 RUN npm install
 COPY server .
 
